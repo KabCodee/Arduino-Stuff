@@ -10,21 +10,22 @@ int playerX = 56;
 int playerY = 56;
 int obstacleX = playerX;
 int obstacleY = 0;
-int rightBttn = 6;
-int leftBttn = 5;
+int rightBttn = 7;
+int leftBttn = 6;
 bool gameOver = false;
+int score = 0;
 
 void setup() {
   // put your setup code here, to run once:
   screen.begin(SSD1306_SWITCHCAPVCC, 0x3c);
   pinMode(rightBttn, INPUT_PULLUP);
   pinMode(leftBttn, INPUT_PULLUP);
-
   
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+    
     if(gameOver == true){
     screen.clearDisplay();
     screen.setCursor(8, 8);
@@ -35,11 +36,12 @@ void loop() {
     screen.setCursor(15, 30);
     screen.println("PRESS RIGHT");
     screen.display();
+    score = 0;
     delay(200);
   }
    if (gameOver == true && digitalRead(rightBttn) == LOW){
     screen.clearDisplay();
-    obstacleY = 64;
+    obstacleY = 0;
     obstacleX = playerX;
     playerX = 56;
     playerY = 56;
@@ -52,7 +54,10 @@ void loop() {
     gameOver = true;
     return;
   }
-  
+   if(obstacleY == 64 && gameOver == false){
+     score += 1;
+
+  }
 
   if(digitalRead(rightBttn) == LOW){
     playerX += 2;
@@ -63,14 +68,14 @@ void loop() {
   if(obstacleY == 64){
     obstacleY = 0;
     obstacleX = playerX;
+    
   }
-
-
-
-
   obstacleY += 4;
-
+  String SCORE = "Score: " + String(score);
   screen.clearDisplay();
+  screen.setCursor(0, 0);
+  screen.setTextColor(WHITE);
+  screen.println(SCORE);
   screen.fillRect(playerX, playerY, 8, 8, WHITE);
   screen.fillRect(obstacleX, obstacleY, 8, 8, WHITE);
   screen.display();
